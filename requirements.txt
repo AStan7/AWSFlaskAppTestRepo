@@ -20,12 +20,4 @@ cymem==2.0.7
 fastai==1.0.57
 
 fastprogress==1.0.3
-fonttools==4.38.0
-idna==3.4
-kiwisolver==1.4.4
-langcodes==3.3.0
-matplotlib==3.6.3
-
-
-
 
