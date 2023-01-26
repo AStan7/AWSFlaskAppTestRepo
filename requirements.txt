@@ -57,7 +57,7 @@ Werkzeug==2.2.2
 zipp==3.11.0
 gunicorn==20.1.0
 
-numpy==1.24.1
+numpy==1.24.0
 matplotlib
 pandas
 scipy
