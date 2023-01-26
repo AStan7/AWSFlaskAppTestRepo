@@ -58,3 +58,4 @@ zipp==3.11.0
 
 numpy
 matplotlib
+pandas
