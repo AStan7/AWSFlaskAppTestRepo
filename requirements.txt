@@ -10,6 +10,7 @@ confection==0.0.4
 contourpy==1.0.7
 cycler==0.11.0
 cymem==2.0.7
+fastai==1.0.57
 fastprogress==1.0.3
 Flask==2.2.2
 fonttools==4.38.0
