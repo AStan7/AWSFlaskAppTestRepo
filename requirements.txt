@@ -26,4 +26,3 @@ langcodes==3.3.0
 
 murmurhash==1.0.9
 numexpr==2.8.4
-numpy==1.24.1
