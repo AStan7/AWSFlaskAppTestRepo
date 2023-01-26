@@ -43,7 +43,6 @@ soupsieve==2.3.2.post1
 spacy==3.5.0
 spacy-legacy==3.0.12
 spacy-loggers==1.0.4
-
 srsly==2.4.5
 thinc==8.1.7
 torch==1.13.1
@@ -56,3 +55,5 @@ urllib3==1.26.14
 wasabi==1.1.1
 Werkzeug==2.2.2
 zipp==3.11.0
+
+numpy
