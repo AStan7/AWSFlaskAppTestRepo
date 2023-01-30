@@ -55,4 +55,5 @@ urllib3==1.26.14
 wasabi==1.1.1
 Werkzeug==2.2.2
 zipp==3.11.0
-pandas==1.5.3
+
+pandas==1.5.2
