@@ -44,3 +44,5 @@ soupsieve==2.3.2.post1
 spacy==3.5.0
 spacy-legacy==3.0.12
 spacy-loggers==1.0.4
+srsly==2.4.5
+thinc==8.1.7
