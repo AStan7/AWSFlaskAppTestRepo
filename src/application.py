@@ -201,11 +201,11 @@ def homepage():
 #     return render_template('info.html')
 
 
-# if __name__ == '__main__':
-#     port = os.environ.get('PORT', 8008)
+if __name__ == '__main__':
+    port = os.environ.get('PORT', 8008)
 
-#     if "prepare" not in sys.argv:
-#         application.run(debug=False, host='0.0.0.0', port=port)
+    if "prepare" not in sys.argv:
+        application.run(debug=False, host='0.0.0.0', port=port)
 
 
 
