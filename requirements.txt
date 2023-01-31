@@ -11,6 +11,8 @@ numpy==1.19.5
 scipy==1.5.4
 typing-extensions==4.1.1
 jsonpickle==2.0.0
+
+
 fastprogress==1.0.3
 fonttools==4.38.0
 idna==3.4
@@ -38,6 +40,7 @@ spacy-legacy==3.0.12
 spacy-loggers==1.0.4
 srsly==2.4.5
 thinc==8.1.7
+
 tqdm==4.64.1
 typer==0.7.0
 typing==3.7.4.3
@@ -47,4 +50,3 @@ wasabi==1.1.1
 Werkzeug==2.2.2
 zipp==3.11.0
 pandas==1.5.3
-matplotlib==3.6.3
