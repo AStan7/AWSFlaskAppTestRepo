@@ -46,5 +46,7 @@ def predict():
             'predict.html', result_value=f'Segment = #{index_min}'
             )
 
+            
+
 if __name__ == '__main__':
     application.run(host='0.0.0.0', port=80, debug=True)
