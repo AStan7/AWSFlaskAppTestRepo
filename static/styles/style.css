@@ -1,55 +1,188 @@
-body {background-color: #cccccc;}
-
-.top_heading {
-  margin-left: 2%
+/* Global */
+*{
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
 }
 
-.prediction {
-  color: blue;
-  font-size: 45px
+#logo{
+  width: 150px;
+  height: 150px;
+  background-size: cover;
+  background-image: url(logo.jpg);
 }
 
-.outer {
-  margin-left: 2%;
-  margin-right: 2%
+.banner{
+  background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url(test.jpg);
+  background-size: cover;
+  height: 100vh;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
 }
 
-.note {
-  color: blue
+.navbar{
+  width: 85%;
+  margin: auto;
+  padding: 35px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.input_area {
-  width: 25%;
-  background-color: rgb(146, 146, 146);
-  padding: 5px;
-  margin-bottom: 2px
-}
 
-.btn {
-  margin-top: 5px;
-  background-color: #e7e7e7;
-  color: black;
-  border: 1px solid #000000;
-  border_radius: 5px;
-  padding: 5px
-}
-
-.btn:hover {
-  transition-duration: 0.5s;
-  background-color: #474747;
-  color: white;
-  cursor: pointer;
-}
-
-#container div {
+.navbar ul li{
   display: inline-block;
-  width:190px
+  list-style: none;
+  margin: 0 20px;
+  position: relative;
 }
 
-label {
-  display: block
+.navbar ul li a{
+  text-decoration: none;
+  color: #fff;
+  text-transform: uppercase;
 }
 
-input, label {
-  margin: .4rem 0;
+.navbar ul li::after{
+  content: '';
+  height: 3px;
+  width: 0;
+  background: #009688;
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  transition: 0.5s;
+}
+
+.navbar ul li:hover::after{
+  width: 100%;
+}
+
+
+.content{
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+}
+
+.content h1{
+  font-size: 70px;
+  margin-top: 80px;
+}
+
+.content p{
+  margin: 20px auto;
+  font-weight: 100;
+  line-height: 25px;
+}
+
+button{
+  width: 200px;
+  padding: 15px 0;
+  text-align: center;
+  margin: 20px 10px;
+  border-radius: 25px;
+  font-weight: bold;
+  border: 2px solid #009688;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+span{
+  background: #009688;
+  height: 100%;
+  width: 0;
+  border-radius: 25px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+  transition: 0.5s;
+}
+
+button:hover span{
+  width: 100%; 
+}
+
+button:hover{
+  border: none; 
+}
+
+
+/* upload */
+.form-control {
+  width: 50%;
+}
+
+h1{
+  color: #fff;
+}
+.comment{
+  color: #fff;
+}
+
+.custom-file-input {
+  width: 50%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+.custom-file-label {
+  width: 50%;
+}
+
+.comment{
+margin-top:20px;
+}
+
+.table {
+width:50%;
+} 
+
+
+
+/* index */
+#submit_btn:hover {
+  background: rgb(15, 245, 3);
+}
+
+#submit_btn{
+  margin-top: 10px;
+  width: 175px;
+  padding: 15px 0;
+  text-align: center;
+  margin: 20px 10px;
+  font-style: bold;
+  border-color: rgb(18, 180, 0);
+  font-weight: bold;
+  font-size: large;
+  background-color: rgb(18, 180, 0);
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border-radius: 25px;
+}
+
+#input_file{
+  margin-top: 10px;
+  background-color: rgb(100, 100, 100);
+  padding: 15px 0;
+  text-align: center;
+  margin: 20px 10px;
+  border-radius: 25px;
+  position: relative;
+  overflow: hidden;
+  width: 600px;
+  font-weight: bold;
+  border: 2px solid #fff;
+  color: #fff;
+  cursor: pointer;
 }
