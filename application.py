@@ -1,10 +1,5 @@
 # Import modules and packages
-from flask import (
-    Flask,
-    request,
-    render_template,
-    url_for
-)
+from flask import Flask, request, render_template
 import pickle
 import numpy as np
 from scipy.spatial import distance
