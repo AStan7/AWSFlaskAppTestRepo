@@ -11,3 +11,4 @@ numpy==1.19.5
 scipy==1.5.4
 typing-extensions==4.1.1
 jsonpickle==2.0.0
+fastai==1.0.57
