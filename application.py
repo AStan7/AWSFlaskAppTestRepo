@@ -1,16 +1,16 @@
-from __future__ import division, print_function
-import sys
-import os
-import glob
-import re
-from pathlib import Path
-from io import BytesIO
-import base64
-import requests
-import numpy
-import cv2
-from scipy.spatial import distance##########
-import io
+# from __future__ import division, print_function
+# import sys
+# import os
+# import glob
+# import re
+# from pathlib import Path
+# from io import BytesIO
+# import base64
+# import requests
+# import numpy
+# import cv2
+# from scipy.spatial import distance##########
+# import io
 
 
 # # Import fast.ai Library
@@ -201,11 +201,11 @@ def homepage():
 #     return render_template('info.html')
 
 
-if __name__ == '__main__':
-    port = os.environ.get('PORT', 8008)
+# if __name__ == '__main__':
+#     port = os.environ.get('PORT', 8008)
 
-    if "prepare" not in sys.argv:
-        application.run(debug=False, host='0.0.0.0', port=port)
+#     if "prepare" not in sys.argv:
+#         application.run(debug=False, host='0.0.0.0', port=port)
 
 
 
