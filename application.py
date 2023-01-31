@@ -16,6 +16,21 @@ def test():
     return render_template('test.html')
 
 
+@application.route('/upload', methods=["POST", "GET"])
+def upload():
+    if request.method == 'POST':
+        # Get the file from post request
+        img = request.files['file'].read()
+
+        # Make prediction
+        preds = model_predict(img)
+        return preds
+    return 'OK'
+
+
+
+
+
 @application.route('/', methods=['POST'])
 def get_input_values():
     val = request.form['my_form']
