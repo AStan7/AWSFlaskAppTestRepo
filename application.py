@@ -10,6 +10,12 @@ application = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@application.route('/test', methods=['GET', "POST"])
+def test():
+    # Main page
+    return render_template('test.html')
+
+
 @application.route('/', methods=['POST'])
 def get_input_values():
     val = request.form['my_form']
@@ -46,7 +52,7 @@ def predict():
             'predict.html', result_value=f'Segment = #{index_min}'
             )
 
-            
+
 
 if __name__ == '__main__':
     application.run(host='0.0.0.0', port=80, debug=True)
