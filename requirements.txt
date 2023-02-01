@@ -56,4 +56,4 @@ gunicorn==20.1.0
 torch==1.13.1
 torchvision==0.14.1
 
-matplotlib==3.6.3
+contourpy==1.0.7
