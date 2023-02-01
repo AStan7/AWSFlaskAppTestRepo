@@ -26,7 +26,8 @@ application = Flask(__name__)
 
 # C:/Users/Aran/Desktop/TUD Work/Year 4/Final Year Project/Code/Testing on Python 3.9/SkinCancerDetection-WebAppNAME_OF_FILE = 'model_best' # Name of your exported file
 NAME_OF_FILE = 'model_best' # Name of your exported file
-PATH_TO_MODELS_DIR = Path('/models') # by default just use /models in root dir
+PATH_TO_MODELS_DIR = Path('C:/Users/Aran/Desktop/TUD Work/Year 4/Final Year Project/Code/Testing on Python 3.9/SkinCancerDetection-WebApp') # by default just use /models in root dir
+#PATH_TO_MODELS_DIR = Path('models') # by default just use /models in root dir
 classes = ['Actinic keratoses', 'Basal cell carcinoma', 'Benign keratosis',
            'Dermatofibroma', 'Melanocytic nevi', 'Melanoma', 'Vascular lesions']
 
