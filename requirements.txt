@@ -7,7 +7,7 @@ Jinja2==3.1.2
 MarkupSafe==2.1.2
 Werkzeug==2.2.2
 zipp==3.11.0
-numpy==1.17.0
+numpy==1.19.5
 scipy==1.5.4
 typing-extensions==4.1.1
 jsonpickle==2.0.0
@@ -57,4 +57,4 @@ torch==1.13.1
 torchvision==0.14.1
 contourpy==0.0.3
 
-matplotlib==3.5.0
+matplotlib==3.4.3
