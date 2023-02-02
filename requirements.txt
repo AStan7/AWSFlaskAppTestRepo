@@ -48,7 +48,7 @@ spacy-loggers==1.0.4
 srsly==2.4.5
 thinc==8.1.7
 torchvision==0.14.1
-torch==1.13.0
+torch==1.13.1
 tqdm==4.64.1
 typer==0.7.0
 typing_extensions==4.4.0
@@ -57,3 +57,4 @@ wasabi==1.1.1
 Werkzeug==2.2.2
 zipp==3.12.0
 -f https://download.pytorch.org/whl/cpu/torch-1.0.0-cp36-cp36m-linux_x86_64.whl
+-f https://github.com/pytorch/pytorch/blob/master/torch/csrc/Module.cpp
