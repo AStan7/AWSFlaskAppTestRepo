@@ -47,8 +47,8 @@ spacy-legacy==3.0.12
 spacy-loggers==1.0.4
 srsly==2.4.5
 thinc==8.1.7
-torchvision==0.14.1
-torch==1.13.1
+torchvision
+torch
 tqdm==4.64.1
 typer==0.7.0
 typing_extensions==4.4.0
