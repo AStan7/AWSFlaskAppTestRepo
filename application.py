@@ -14,7 +14,6 @@ import base64
 import requests
 import numpy
 import cv2
-from scipy.spatial import distance##########
 import io
 from PIL import Image as PILImage
 
