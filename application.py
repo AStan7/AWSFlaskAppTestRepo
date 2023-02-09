@@ -1,5 +1,7 @@
 # Import modules and packages
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
+
 import pickle
 import numpy as np
 from scipy.spatial import distance
@@ -22,6 +24,24 @@ from fastai import *
 from fastai.vision import *
 
 application = Flask(__name__)
+
+application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:password@flaskdb.cy3lotqpgdfu.us-east-1.rds.amazonaws.com/testingdb_aws'
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+application.secret_key = "somethingunique"
+
+db = SQLAlchemy(application)
+
+class Book(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    author = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Float)
+
+    def __init__(self, title, author, price):
+        self.title = title
+        self.author = author
+        self.price = price
+
 
 # C:/Users/Aran/Desktop/TUD Work/Year 4/Final Year Project/Code/Testing on Python 3.9/SkinCancerDetection-WebAppNAME_OF_FILE = 'model_best' # Name of your exported file
 NAME_OF_FILE = 'model_best' # Name of your exported file
@@ -184,45 +204,75 @@ def upload():
             return preds
     return 'OK'
 
-
-
-
-
-@application.route('/', methods=['POST'])
-def get_input_values():
-    val = request.form['my_form']
-
-
-@application.route('/predict', methods=['POST', 'GET'])
+@application.route('/predict')
 def predict():
-    if request.method == 'GET':
-        return 'The URL /predict is accessed directly. Go to the main page firstly'
+    books = Book.query.all()
+    return render_template('predict.html', books=books)
 
-    if request.method == 'POST':
-        input_val = request.form
 
-        if input_val != None:
-            # collecting values
-            vals = []
-            for key, value in input_val.items():
-                vals.append(float(value))
+@application.route('/info', methods=['GET', "POST"])
+def info():
+    # Information page
+    return render_template('info.html')
 
-        # Calculate Euclidean distances to freezed centroids
-        with open('freezed_centroids.pkl', 'rb') as file:
-            freezed_centroids = pickle.load(file)
+@application.route('/add', methods =['POST'])
+def insert_book():
+    if request.method == "POST":
+        book = Book(
+            title = request.form.get('title'),
+            author = request.form.get('author'),
+            price = request.form.get('price')
+        )
+        db.session.add(book)
+        db.session.commit()
+        flash("Book added successfully")
+        return redirect(url_for('predict'))
 
-        assigned_clusters = []
-        l = []  # list of distances
+@application.route('/delete/<id>/', methods = ['GET', 'POST'])
+def delete(id):
+    my_data = Book.query.get(id)
+    db.session.delete(my_data)
+    db.session.commit()
+    flash("Book is deleted")
+    return redirect(url_for('predict'))
 
-        for i, this_segment in enumerate(freezed_centroids):
-            dist = distance.euclidean(*vals, this_segment)
-            l.append(dist)
-            index_min = np.argmin(l)
-            assigned_clusters.append(index_min)
 
-        return render_template(
-            'predict.html', result_value=f'Segment = #{index_min}'
-            )
+
+# @application.route('/', methods=['POST'])
+# def get_input_values():
+#     val = request.form['my_form']
+
+
+# @application.route('/predict', methods=['POST', 'GET'])
+# def predict():
+#     if request.method == 'GET':
+#         return 'The URL /predict is accessed directly. Go to the main page firstly'
+
+#     if request.method == 'POST':
+#         input_val = request.form
+
+#         if input_val != None:
+#             # collecting values
+#             vals = []
+#             for key, value in input_val.items():
+#                 vals.append(float(value))
+
+#         # Calculate Euclidean distances to freezed centroids
+#         with open('freezed_centroids.pkl', 'rb') as file:
+#             freezed_centroids = pickle.load(file)
+
+#         assigned_clusters = []
+#         l = []  # list of distances
+
+#         for i, this_segment in enumerate(freezed_centroids):
+#             dist = distance.euclidean(*vals, this_segment)
+#             l.append(dist)
+#             index_min = np.argmin(l)
+#             assigned_clusters.append(index_min)
+
+#         return render_template(
+#             'predict.html', result_value=f'Segment = #{index_min}'
+#             )
 
 
 
