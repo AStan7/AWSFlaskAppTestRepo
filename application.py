@@ -25,7 +25,7 @@ from fastai.vision import *
 
 application = Flask(__name__)
 
-application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:password@flaskdb.cy3lotqpgdfu.us-east-1.rds.amazonaws.com/flaskdb'
+application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:password@flaskdb.cy3lotqpgdfu.us-east-1.rds.amazonaws.com/testingdb_aws'
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 application.secret_key = "somethingunique"
 
