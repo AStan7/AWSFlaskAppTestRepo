@@ -19,9 +19,6 @@ import numpy
 import cv2
 import io
 from PIL import Image as PILImage
-import MySQLdb.cursors
-from flask_mysqldb import MySQL
-import pymysql
 #from passlib.hash import sha256_crypt
 
 # Import fast.ai Library
@@ -308,7 +305,6 @@ def info():
     return render_template('info.html')
 
 
-
 if __name__ == '__main__':
 
     if "prepare" not in sys.argv:
@@ -466,10 +462,12 @@ if __name__ == '__main__':
 #                 flash("password does not match")
 #                 return render_template('login.html')
 
+
 # @application.route('/predict')
 # def predict():
 #     books = Book.query.all()
 #     return render_template('predict.html', books=books)
+
 
 
 # @application.route('/add', methods =['POST'])
@@ -484,6 +482,8 @@ if __name__ == '__main__':
 #         db.session.commit()
 #         flash("Book added successfully")
 #         return redirect(url_for('predict'))
+
+
 
 # @application.route('/delete/<id>/', methods = ['GET', 'POST'])
 # def delete(id):
