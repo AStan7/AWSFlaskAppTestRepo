@@ -1,6 +1,7 @@
 # Import modules and packages
-from flask import Flask, request, render_template, redirect, url_for, flash
+from flask import Flask, request, render_template, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
+
 
 import pickle
 import numpy as np
@@ -18,10 +19,53 @@ import numpy
 import cv2
 import io
 from PIL import Image as PILImage
+import MySQLdb.cursors
+from flask_mysqldb import MySQL
+import pymysql
+#from passlib.hash import sha256_crypt
 
 # Import fast.ai Library
 from fastai import *
 from fastai.vision import *
+
+# import pymysql
+
+# conn = pymysql.connect(
+#         host= 'mysql://admin:password@flaskdb.cy3lotqpgdfu.us-east-1.rds.amazonaws.com', 
+#         port = 3306,
+#         user = 'admin', 
+#         password = 'password',
+#         db = 'testingdb_aws'
+        
+#         )
+
+# application = Flask(__name__)
+
+# # # Change this to your secret key (can be anything, it's for extra protection)
+# application.secret_key = 'your secret key'
+
+# # # Enter your database connection details below
+# application.config['MYSQL_HOST'] = 'mysql://admin:password@flaskdb.cy3lotqpgdfu.us-east-1.rds.amazonaws.com'
+# application.config['MYSQL_USER'] = 'admin'
+# application.config['MYSQL_PASSWORD'] = 'password'
+# application.config['MYSQL_DB'] = 'testingdb_aws'
+
+# # Intialize MySQL
+# mysql = MySQL(application)
+
+# app = Flask(__name__)
+
+# # Change this to your secret key (can be anything, it's for extra protection)
+# app.secret_key = 'your secret key'
+
+# # Enter your database connection details below
+# app.config['MYSQL_HOST'] = 'localhost'
+# app.config['MYSQL_USER'] = 'root'
+# app.config['MYSQL_PASSWORD'] = ''
+# app.config['MYSQL_DB'] = 'pythonlogin'
+
+# # Intialize MySQL
+# mysql = MySQL(app)
 
 application = Flask(__name__)
 
@@ -31,16 +75,27 @@ application.secret_key = "somethingunique"
 
 db = SQLAlchemy(application)
 
-class Book(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    author = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Float)
+# class Book(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     title = db.Column(db.String(100), nullable=False)
+#     author = db.Column(db.String(100), nullable=False)
+#     price = db.Column(db.Float)
 
-    def __init__(self, title, author, price):
-        self.title = title
-        self.author = author
-        self.price = price
+#     def __init__(self, title, author, price):
+#         self.title = title
+#         self.author = author
+#         self.price = price
+
+class accounts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+
+    # def __init__(self, username, password, email):
+    #     self.title = username
+    #     self.author = password
+    #     self.price = email
 
 
 # C:/Users/Aran/Desktop/TUD Work/Year 4/Final Year Project/Code/Testing on Python 3.9/SkinCancerDetection-WebAppNAME_OF_FILE = 'model_best' # Name of your exported file
@@ -204,37 +259,239 @@ def upload():
             return preds
     return 'OK'
 
-@application.route('/predict')
-def predict():
-    books = Book.query.all()
-    return render_template('predict.html', books=books)
+@application.route("/login",methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        
+        login = accounts.query.filter_by(username=username, password=password).first()
+        if login is not None:
+            session["logged_in"] = True
+            return redirect(url_for("index"))
+    session["logged_in"] = False
+    return render_template("login.html")
 
+
+
+@application.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+
+        register = accounts(username = username, email = email, password = password)
+        db.session.add(register)
+        db.session.commit()
+
+        return redirect(url_for("login"))
+    return render_template("register.html")
+
+@application.route('/logout')
+def logout():
+     # Remove session data, this will log the user out
+    session.pop('logged_in', None)
+    session.pop('id', None)
+    session.pop('username', None)
+    # Redirect to login page
+    return redirect(url_for('index'))
+
+@application.route('/account', methods=['GET', "POST"])
+def account():
+    # Main page
+    return render_template('account.html')
 
 @application.route('/info', methods=['GET', "POST"])
 def info():
     # Information page
     return render_template('info.html')
 
-@application.route('/add', methods =['POST'])
-def insert_book():
-    if request.method == "POST":
-        book = Book(
-            title = request.form.get('title'),
-            author = request.form.get('author'),
-            price = request.form.get('price')
-        )
-        db.session.add(book)
-        db.session.commit()
-        flash("Book added successfully")
-        return redirect(url_for('predict'))
 
-@application.route('/delete/<id>/', methods = ['GET', 'POST'])
-def delete(id):
-    my_data = Book.query.get(id)
-    db.session.delete(my_data)
-    db.session.commit()
-    flash("Book is deleted")
-    return redirect(url_for('predict'))
+
+if __name__ == '__main__':
+
+    if "prepare" not in sys.argv:
+        application.run(host='0.0.0.0', port=80, debug=False)
+
+
+
+
+# # http://localhost:5000/pythonlogin/ - the following will be our login page, which will use both GET and POST requests
+# @application.route('/login/', methods=['GET', 'POST'])
+# def login():
+#     # Output message if something goes wrong...
+#     msg = ''
+#     # Check if "username" and "password" POST requests exist (user submitted form)
+#     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
+#         # Create variables for easy access
+#         username = request.form['username']
+#         password = request.form['password']
+#         # Check if account exists using MySQL
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         #cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+#         cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, password,))
+#         # Fetch one record and return result
+#         account = cursor.fetchone()
+#                 # If account exists in accounts table in out database
+#         if account:
+#             # Create session data, we can access this data in other routes
+#             session['loggedin'] = True
+#             session['id'] = account['id']
+#             session['username'] = account['username']
+#             # Redirect to home page
+#             return 'Logged in successfully!'
+#         else:
+#             # Account doesnt exist or username/password incorrect
+#             msg = 'Incorrect username/password!'
+#     # return render_template('index.html', msg='')
+#     return render_template('login.html', msg='')
+
+# # http://localhost:5000/python/logout - this will be the logout page
+# @application.route('/login/logout')
+# def logout():
+#     # Remove session data, this will log the user out
+#    session.pop('loggedin', None)
+#    session.pop('id', None)
+#    session.pop('username', None)
+#    # Redirect to login page
+#    return redirect(url_for('login'))
+
+
+# # http://localhost:5000/pythinlogin/register - this will be the registration page, we need to use both GET and POST requests
+# @application.route('/login/register', methods=['GET', 'POST'])
+# def register():
+#     # Output message if something goes wrong...
+#     msg = ''
+#     # Check if "username", "password" and "email" POST requests exist (user submitted form)
+#     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
+#         # Create variables for easy access
+#         username = request.form['username']
+#         password = request.form['password']
+#         email = request.form['email']
+#         # Check if account exists using MySQL
+        
+#         cursor=conn.cursor()
+#         #cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         #cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+#         cursor.execute('SELECT * FROM accounts WHERE username = %s', (username,))
+#         account = cursor.fetchone()
+#         # If account exists show error and validation checks
+#         if account:
+#             msg = 'Account already exists!'
+#         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+#             msg = 'Invalid email address!'
+#         elif not re.match(r'[A-Za-z0-9]+', username):
+#             msg = 'Username must contain only characters and numbers!'
+#         elif not username or not password or not email:
+#             msg = 'Please fill out the form!'
+#         else:
+#             # Account doesnt exists and the form data is valid, now insert new account into accounts table
+#             cursor.execute('INSERT INTO accounts VALUES (NULL, %s, %s, %s)', (username, password, email,))
+#             conn.commit()
+#             #mysql.connection.commit()
+#             #db.connection.commit()
+#             msg = 'You have successfully registered!'
+#     elif request.method == 'POST':
+#         # Form is empty... (no POST data)
+#         msg = 'Please fill out the form!'
+#     # Show registration form with message (if any)
+#     return render_template('register.html', msg=msg)
+
+# http://localhost:5000/pythinlogin/register - this will be the registration page, we need to use both GET and POST requests
+# @application.route('/register', methods=['GET', 'POST'])
+# def register():
+#     # Check if "username", "password" and "email" POST requests exist (user submitted form)
+#     if request.method == 'POST':# and 'username' in request.form and 'password' in request.form and 'email' in request.form:
+#         # Create variables for easy access
+#         user = User(
+#         username = request.form['username'],
+#         password = request.form['password'],
+#         email = request.form['email']
+#         )
+#         #secure_password=sha256_crypt.encrypt(str(password))
+#         # Check if account exists using MySQL
+        
+#         usernamedata=db.execute("SELECT username FROM users WHERE username=:username",{"username":user.username}).fetchone()
+#         #usernamedata=str(usernamedata)
+        
+        
+#         if usernamedata == None:
+#             if user.password==user.password:
+#                 db.execute("INSERT INTO users (username, password, email) VALUES (:username, :password, :email)",{"username":user.username, "password":user.password, "email":user.email})
+#                 db.commit()
+#                 flash("You are registered and can now login","success")
+#                 return redirect(url_for('login'))
+#             else:
+#                  flash("password does not match")
+#                  return render_template('register.html')
+    
+#         else:
+#             flash("username already exists")
+#             return render_template(url_for('login'))
+
+#     return render_template('register.html')
+
+# @application.route('/add', methods =['POST'])
+# def insert_book():
+#     if request.method == "POST":
+#         book = Book(
+#             title = request.form.get('title'),
+#             author = request.form.get('author'),
+#             price = request.form.get('price')
+#         )
+#         db.session.add(book)
+#         db.session.commit()
+#         flash("Book added successfully")
+#         return redirect(url_for('predict'))
+
+
+
+# @application.route('/login/', methods=['GET', 'POST'])
+# def login():
+#     if request.method=="POST":
+#         username=request.form['username']
+#         password=request.form['password']
+#         usernamedata=db.execute("SELECT username FROM users WHERE username=:username",{"username":username}).fetchone()
+#         passworddata=db.execute("SELECT password FROM users WHERE username=:username",{"username":username}).fetchone()
+
+#         if usernamedata in None:
+#             flash("username does not exist")
+#             return render_template('login.html')
+#         else:
+#             if password==passworddata:
+#                 flash("You are logged in")
+#                 return redirect(url_for('index'))
+#             else:
+#                 flash("password does not match")
+#                 return render_template('login.html')
+
+# @application.route('/predict')
+# def predict():
+#     books = Book.query.all()
+#     return render_template('predict.html', books=books)
+
+
+# @application.route('/add', methods =['POST'])
+# def insert_book():
+#     if request.method == "POST":
+#         book = Book(
+#             title = request.form.get('title'),
+#             author = request.form.get('author'),
+#             price = request.form.get('price')
+#         )
+#         db.session.add(book)
+#         db.session.commit()
+#         flash("Book added successfully")
+#         return redirect(url_for('predict'))
+
+# @application.route('/delete/<id>/', methods = ['GET', 'POST'])
+# def delete(id):
+#     my_data = Book.query.get(id)
+#     db.session.delete(my_data)
+#     db.session.commit()
+#     flash("Book is deleted")
+#     return redirect(url_for('predict'))
 
 
 
@@ -273,10 +530,3 @@ def delete(id):
 #         return render_template(
 #             'predict.html', result_value=f'Segment = #{index_min}'
 #             )
-
-
-
-if __name__ == '__main__':
-
-    if "prepare" not in sys.argv:
-        application.run(host='0.0.0.0', port=80, debug=False)
