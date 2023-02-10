@@ -2,6 +2,21 @@
         {% extends "base.html" %}
         {% block index %}
 
+
+        <script>
+            /* Storing user's device details in a variable*/
+            let details = navigator.userAgent;
+      
+            /* Creating a regular expression 
+            containing some mobile devices keywords 
+            to search it in details string*/
+            let regexp = /android|iphone|kindle|ipad/i;
+      
+            /* Using test() method to search regexp in details
+            it returns boolean value*/
+            let isMobileDevice = regexp.test(details);
+
+        </script>
         <div class="content">
             <h1>Benign or Malignant</h1>
             <p class="comment">Find out if the skin lesion is normal or not. Upload image or specify URL.</p>
@@ -9,9 +24,13 @@
                 <form action="/upload" id="upload-file" method="post" enctype="multipart/form-data">
                     <p class="comment">Select image to upload and press Detect:</p>
                     <div class="custom-file">
+                        {% if isMobileDevice %}  
+                        <input type="file" id="input_file" capture="user" accept="image/*"/> 
+                        <label class="custom-file-label" for="customFile"></label>
+                        {% else %}
                         <input ID="input_file" type="file" class="custom-file-input" name="file">
                         <label class="custom-file-label" for="customFile"></label>
-                        <input type="file" id="imageFile" capture="user" accept="image/*"/>
+                        {% endif %}
                     </div>
 
                     <div>
