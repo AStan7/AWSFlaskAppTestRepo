@@ -19,6 +19,9 @@ import numpy
 import cv2
 import io
 from PIL import Image as PILImage
+#import MySQLdb.cursors
+#from flask_mysqldb import MySQL
+#import pymysql
 #from passlib.hash import sha256_crypt
 
 # Import fast.ai Library
