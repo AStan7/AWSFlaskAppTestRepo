@@ -19,6 +19,7 @@ import numpy
 import cv2
 import io
 from PIL import Image as PILImage
+from datetime import date, datetime
 #import MySQLdb.cursors
 #from flask_mysqldb import MySQL
 #import pymysql
@@ -97,6 +98,14 @@ class accounts(db.Model):
     #     self.author = password
     #     self.price = email
 
+class imagetest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    image = db.Column(db.LargeBinary, nullable=False)
+    prediction = db.Column(db.String(100), nullable=False)
+    date = db.Column(db.String(100), nullable=False)
+    time = db.Column(db.String(100), nullable=False)
+
+
 
 # C:/Users/Aran/Desktop/TUD Work/Year 4/Final Year Project/Code/Testing on Python 3.9/SkinCancerDetection-WebAppNAME_OF_FILE = 'model_best' # Name of your exported file
 NAME_OF_FILE = 'model_best' # Name of your exported file
@@ -125,6 +134,7 @@ def encode(img):
     return base64.b64encode(buff.getvalue()).decode("utf-8")
 
 def model_predict(img):
+    imagecopy = img
     img = open_image(BytesIO(img))
     pred_class,pred_idx,outputs = learn.predict(img)
     formatted_outputs = ["{:.1f}%".format(value) for value in [x * 100 for x in torch.nn.functional.softmax(outputs, dim=0)]]
@@ -133,10 +143,49 @@ def model_predict(img):
             key=lambda p: p[1],
             reverse=True
         )
-	
+
     img_data = encode(img)
+	
+    localtime = datetime.now()
+    it = imagetest(image = imagecopy,
+                prediction = pred_class,
+                date = date.today(),
+                time = localtime.strftime("%H:%M:%S")
+                )
+    db.session.add(it)
+    db.session.commit()
+    flash("Image added successfully")
     result = {"class":pred_class, "probs":pred_probs, "image":img_data}
     return render_template('result.html', result=result)
+
+# @application.route('/upload', methods=["POST", "GET"])
+# def upload():
+#     if request.method == 'POST':
+#         # Get the file from post request
+#         img = request.files['file'].read()
+#         IP(img)
+#         img = IP(img)
+#         # localtime = datetime.now()
+#         # it = imagetest(image = img,
+#         #             date = date.today(),
+#         #             time = localtime.strftime("%H:%M:%S")
+#         #             )
+#         # db.session.add(it)
+#         # db.session.commit()
+#         # flash("Image added successfully")
+
+#         if img != None:
+#             # Make prediction
+#             preds = model_predict(img)
+            
+#             return preds
+
+#     return 'OK'
+
+
+
+
+
 
 def IP(img):
     # Convert image to openCV 
@@ -253,11 +302,15 @@ def upload():
         img = request.files['file'].read()
         IP(img)
         img = IP(img)
+
         if img != None:
             # Make prediction
             preds = model_predict(img)
             return preds
+
     return 'OK'
+
+
 
 @application.route("/login",methods=["GET", "POST"])
 def login():
@@ -327,6 +380,8 @@ def insert_book():
         db.session.commit()
         flash("Book added successfully")
         return redirect(url_for('predict'))
+
+
 
 
 
