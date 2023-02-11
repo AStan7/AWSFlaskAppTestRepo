@@ -75,16 +75,16 @@ application.secret_key = "somethingunique"
 
 db = SQLAlchemy(application)
 
-# class Book(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     title = db.Column(db.String(100), nullable=False)
-#     author = db.Column(db.String(100), nullable=False)
-#     price = db.Column(db.Float)
+class Book(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    author = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Float)
 
-#     def __init__(self, title, author, price):
-#         self.title = title
-#         self.author = author
-#         self.price = price
+    def __init__(self, title, author, price):
+        self.title = title
+        self.author = author
+        self.price = price
 
 class accounts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -308,6 +308,43 @@ def info():
     return render_template('info.html')
 
 
+@application.route('/predict')
+def predict():
+    books = Book.query.all()
+    return render_template('predict.html', books=books)
+
+
+
+@application.route('/add', methods =['POST'])
+def insert_book():
+    if request.method == "POST":
+        book = Book(
+            title = request.form.get('title'),
+            author = request.form.get('author'),
+            price = request.form.get('price')
+        )
+        db.session.add(book)
+        db.session.commit()
+        flash("Book added successfully")
+        return redirect(url_for('predict'))
+
+
+
+@application.route('/delete/<id>/', methods = ['GET', 'POST'])
+def delete(id):
+    my_data = Book.query.get(id)
+    db.session.delete(my_data)
+    db.session.commit()
+    flash("Book is deleted")
+    return redirect(url_for('predict'))
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
 
     if "prepare" not in sys.argv:
@@ -431,20 +468,6 @@ if __name__ == '__main__':
 
 #     return render_template('register.html')
 
-# @application.route('/add', methods =['POST'])
-# def insert_book():
-#     if request.method == "POST":
-#         book = Book(
-#             title = request.form.get('title'),
-#             author = request.form.get('author'),
-#             price = request.form.get('price')
-#         )
-#         db.session.add(book)
-#         db.session.commit()
-#         flash("Book added successfully")
-#         return redirect(url_for('predict'))
-
-
 
 # @application.route('/login/', methods=['GET', 'POST'])
 # def login():
@@ -464,39 +487,6 @@ if __name__ == '__main__':
 #             else:
 #                 flash("password does not match")
 #                 return render_template('login.html')
-
-
-# @application.route('/predict')
-# def predict():
-#     books = Book.query.all()
-#     return render_template('predict.html', books=books)
-
-
-
-# @application.route('/add', methods =['POST'])
-# def insert_book():
-#     if request.method == "POST":
-#         book = Book(
-#             title = request.form.get('title'),
-#             author = request.form.get('author'),
-#             price = request.form.get('price')
-#         )
-#         db.session.add(book)
-#         db.session.commit()
-#         flash("Book added successfully")
-#         return redirect(url_for('predict'))
-
-
-
-# @application.route('/delete/<id>/', methods = ['GET', 'POST'])
-# def delete(id):
-#     my_data = Book.query.get(id)
-#     db.session.delete(my_data)
-#     db.session.commit()
-#     flash("Book is deleted")
-#     return redirect(url_for('predict'))
-
-
 
 # @application.route('/', methods=['POST'])
 # def get_input_values():
