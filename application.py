@@ -339,12 +339,6 @@ def delete(id):
     return redirect(url_for('predict'))
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
 
     if "prepare" not in sys.argv:
