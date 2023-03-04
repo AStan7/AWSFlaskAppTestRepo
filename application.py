@@ -20,7 +20,7 @@ import cv2
 import io
 from PIL import Image as PILImage
 from datetime import date, datetime, timedelta
-from flask_login import current_user, LoginManager
+#from flask_login import current_user, LoginManager
 import bcrypt
 
 
