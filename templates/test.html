@@ -1,46 +1,52 @@
-
-        {% extends "base.html" %}
-        {% block index %}
-
-
-        <script>
+{% extends "base.html" %}
+{% block index %}
+<script>
             /* Storing user's device details in a variable*/
-            let details = navigator.userAgent;
-      
-            /* Creating a regular expression 
-            containing some mobile devices keywords 
-            to search it in details string*/
-            let regexp = /android|iphone|kindle|ipad/i;
-      
-            /* Using test() method to search regexp in details
-            it returns boolean value*/
-            let isMobileDevice = regexp.test(details);
+    let details = navigator.userAgent;
 
-        </script>
-        <div class="content">
-            <h1>Benign or Malignant</h1>
-            <p class="comment">Find out if the skin lesion is normal or not. Upload image or specify URL.</p>
-            <dive class="col-xs-6">
-                <form action="/upload" id="upload-file" method="post" enctype="multipart/form-data">
-                    <p class="comment">Select image to upload and press Detect:</p>
-                    <div class="custom-file">
-                        {% if isMobileDevice %}  
-                        <input type="file" id="input_file" capture="user" accept="image/*"/> 
-                        <label class="custom-file-label" for="customFile"></label>
-                        {% else %}
-                        <input ID="input_file" type="file" class="custom-file-input" name="file">
-                        <label class="custom-file-label" for="customFile"></label>
-                        {% endif %}
-                    </div>
+    /* Creating a regular expression 
+    containing some mobile devices keywords 
+    to search it in details string*/
+    let regexp = /android|iphone|kindle|ipad/i;
 
-                    <div>
-                        <input ID="submit_btn" type="submit" class="btn btn-success" id="btn-predict" value="Detect" />
-                    </div>
-                </form>
+    /* Using test() method to search regexp in details
+    it returns boolean value*/
+    let isMobileDevice = regexp.test(details);
 
-                <h3 id="result">
-                    <span> </span>
-                </h3>
-            </dive>
-        </div>  
-        {% endblock %}
+</script>
+
+<div class="content">
+    <h1>Benign or Malignant</h1>
+    <p class="comment">Find out if the skin lesion is normal or not. Upload image or specify URL.</p>
+    <dive class="col-xs-6">
+        <form action="/upload" id="upload-file" method="post" enctype="multipart/form-data">
+            <p class="comment">Select image to upload and press Detect:</p>
+            <div class="custom-file">
+                {% if isMobileDevice %}  
+                <input type="file" id="input_file" capture="user" accept="image/*"/> 
+                <label class="custom-file-label" for="customFile"></label>
+                {% else %}
+                <input ID="input_file" type="file" class="custom-file-input" name="file">
+                <label class="custom-file-label" for="customFile"></label>
+                {% endif %}
+            </div>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="flash-message">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div>
+                <input ID="submit_btn" type="submit" class="btn btn-success" id="btn-predict" value="Detect" />
+            </div>
+        </form>
+
+        <h3 id="result">
+            <span> </span>
+        </h3>
+    </dive>
+</div>  
+{% endblock %}

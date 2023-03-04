@@ -1,6 +1,105 @@
 {% extends "base.html" %}
-{% block account %}
+{% block account1 %}
+<head>
+    <meta charset="utf-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/style2.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"> 
+
+</head>
+
 <body>
-        <h1>This will contain the users past tests and account info</h1>
-</body>  
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success" role="alert">
+                        {{message}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <div class="all_card" id="allcard">
+                {% for accounts in account %}
+            </div>
+            <!-- update model -->
+            <div id="modaledit{{accounts.id}}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Update Account Information</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{url_for('update')}}" method="POST">
+                                <div class="form-group">
+                                    <label>Username:</label>
+                                    <input type="hidden"  name="id" value="{{accounts.id}}">
+                                    <input type="text" class="form-control" name="username" value="{{accounts.username}}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Email:</label>
+                                    <input type="text" class="form-control" name="email" value="{{accounts.email}}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password:</label>
+                                    <input type="password" class="form-control" name="password" value="********">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary mt-4" type="submit">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4 mb-4 p-3 d-flex justify-content-center" id="card">
+        <div class="card p-5" style="width: 30%;">
+          <div class="image d-flex flex-column justify-content-center align-items-center">
+            <button class="btn btn-secondary">
+              <img src="static/images/accounticon.png" height="100" width="100" />
+            </button>
+            <span class="name p-4">{{accounts.username}}</span>
+            <span class="idd">{{accounts.email}}</span>
+            <div class="d-flex flex-row justify-content-center align-items-center gap-2 mt-3">
+              <span class="label">ID:</span>
+              <span class="idd1">Oxc4c16a645_b21a</span>
+              <span><i class="fa fa-copy"></i></span>
+            </div>
+            <div class="d-flex flex-row justify-content-center align-items-center mt-3">
+              <span class="number">Tests Taken:  {{accounts.test_count}}</span>
+            </div>
+            <div class="d-flex mt-2 justify-content-center">
+                <a href="/update/{{accounts.id}}" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modaledit{{accounts.id}}">Update</a>
+            </div>
+            <span class="idd mt-5">Next Test Date: {{accounts.schelduled_test}}</span>
+            <div class="d-flex mt-2 justify-content-center">
+                <a onclick="location.href='account1'" class="btn btn-success">View Your Tests</a>
+            </div>
+            <div class="text mt-3">
+              <span>
+                <br /><br />
+              </span>
+            </div>
+            <div class="px-2 rounded mt-4 date">
+              <span class="join">Joined on {{accounts.account_created}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {% endfor %}
+
+
+</body>
+    <footer>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    </footer>
 {% endblock %}

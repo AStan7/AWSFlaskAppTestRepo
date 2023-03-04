@@ -21,13 +21,19 @@
   background-position: center;
 }
 
-.navbar{
-  width: 85%;
+
+
+#navbar_base{
+  width: 100%;
   margin: auto;
-  padding: 35px 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5%;
+  padding-right: 10%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: red;
 }
 
 
@@ -38,10 +44,13 @@
   position: relative;
 }
 
+
 .navbar ul li a{
   text-decoration: none;
   color: #fff;
   text-transform: uppercase;
+  padding : 5px 5px;
+  background-color: blue;
 }
 
 .navbar ul li::after{
@@ -61,16 +70,23 @@
 
 
 .content{
+  margin: auto; /* set left and right margins to auto to center the container */
+  text-align: center;
+} 
+
+
+
+/* .content{
   width: 100%;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   text-align: center;
-}
+} */
 
 .content h1{
   font-size: 70px;
-  margin-top: 80px;
+  margin-top: 5%;
 }
 
 .content p{
@@ -79,7 +95,7 @@
   line-height: 25px;
 }
 
-button{
+/* button{
   width: 200px;
   padding: 15px 0;
   text-align: center;
@@ -92,9 +108,9 @@ button{
   cursor: pointer;
   position: relative;
   overflow: hidden;
-}
+} */
 
-span{
+/* span{
   background: #009688;
   height: 100%;
   width: 0;
@@ -104,7 +120,7 @@ span{
   bottom: 0;
   z-index: -1;
   transition: 0.5s;
-}
+} */
 
 button:hover span{
   width: 100%; 
@@ -189,16 +205,24 @@ width:50%;
 
 
 
+#pasttest_thumnail{
+  width: 150px;
+  height: 150px;
+}
+
+
 
 
 /* Login */
-* {
+* 
+{
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 body {
   background-color: #435165;
   margin: 0;
@@ -340,3 +364,16 @@ padding: 5px;
 margin: 0 0 10px 0;
 }
 /* End */
+
+
+
+
+
+
+
+
+
+
+
+
+
