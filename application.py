@@ -1,8 +1,6 @@
-# Import modules and packages
+# Import nessaserry modules and packages
 from flask import Flask, request, render_template, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
-
-
 import pickle
 import numpy as np
 from scipy.spatial import distance
@@ -11,7 +9,6 @@ import sys
 import os
 import glob
 import re
-from pathlib import Path
 from io import BytesIO
 import base64
 import requests
@@ -20,18 +17,15 @@ import cv2
 import io
 from PIL import Image as PILImage
 from datetime import date, datetime, timedelta
-#from flask_login import current_user, LoginManager
 import bcrypt
-
-
-# Import fast.ai Library
 from fastai import *
 from fastai.vision import *
 
 
-
+# Create Flask application
 application = Flask(__name__)
 
+# Connect to MySQL database in AWS RDS
 application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:password@flaskdb.cy3lotqpgdfu.us-east-1.rds.amazonaws.com/testingdb_aws'
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 application.secret_key = "somethingunique"
@@ -39,17 +33,7 @@ application.secret_key = "somethingunique"
 db = SQLAlchemy(application)
 
 
-class Book(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    author = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Float)
-
-    def __init__(self, title, author, price):
-        self.title = title
-        self.author = author
-        self.price = price
-
+# Create class for user accounts in database
 class accounts(db.Model): #usermixin
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
@@ -65,18 +49,19 @@ class accounts(db.Model): #usermixin
         return f'<User(username={self.username}, password={self.password}, email={self.email})>'
 
 
+# Create class for users test data in database
 class imagetest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    #image = db.Column(db.LargeBinary, nullable=False)
     image = db.Column(db.String(10000), nullable=False)
     prediction = db.Column(db.String(100), nullable=False)
-    #advice = db.Column(db.String(500), nullable=False)
+    advice = db.Column(db.String(1000), nullable=False)
     date = db.Column(db.String(100), nullable=False)
     time = db.Column(db.String(100), nullable=False)
     username = db.Column(db.String(50), nullable=False)
     next_test = db.Column(db.String(100), nullable=False)
 
-    
+
+# Create class for model training csv data in database
 class model_training(db.Model):
     lesion_id = db.Column(db.String(50), nullable=False)
     image_id = db.Column(db.String(50), primary_key=True)
@@ -87,40 +72,52 @@ class model_training(db.Model):
     localization = db.Column(db.String(50), nullable=False)
     lesion = db.Column(db.String(50), nullable=False)
 
+# Create class for model training image data in database
 class image_training(db.Model):
     image_id = db.Column(db.Integer, primary_key=True)
     image = db.Column(db.String(10000), nullable=False)
 
+# Create class for advice data in database
+class advicedb(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    Lesion_Type = db.Column(db.String(100), nullable=False)
+    Advice = db.Column(db.String(1000), nullable=False)
 
 
-NAME_OF_FILE = 'model_best' # Name of your exported file
-PATH_TO_MODELS_DIR = Path('') # by default just use /models in root dir
+MODELDIR = Path('') # Path to the directory containing the trained model
+MODELNAME = 'DenseNet169-skincancer-LR1e-3' # Name of the trained model to use
+
+# Defining the different classes in the trained model
 classes = ['Actinic keratoses', 'Basal cell carcinoma', 'Benign keratosis',
            'Dermatofibroma', 'Melanocytic nevi', 'Melanoma', 'Vascular lesions']
 
-def setup_model_pth(path_to_pth_file, learner_name_to_load, classes):
-    data = ImageDataBunch.single_from_classes(
-        path_to_pth_file, classes, ds_tfms=get_transforms(), size=224).normalize(imagenet_stats)
+
+# Loading trained model and preparing input data for the model
+def loading_model(path_to_model, modelname, classes):
+    data = ImageDataBunch.single_from_classes(path_to_model, classes, 
+        ds_tfms=get_transforms(), size=224).normalize(imagenet_stats)
     learn = cnn_learner(data, models.densenet169, model_dir='models')
-    learn.load(learner_name_to_load, device=torch.device('cpu'))
+    learn.load(modelname, device=torch.device('cpu'))
     return learn
 
-learn = setup_model_pth(PATH_TO_MODELS_DIR, NAME_OF_FILE, classes)
+# Assigning the trained model to a variable that can be used to make predictions
+learn = loading_model(MODELDIR, MODELNAME, classes)
 
+
+# Function to encode the uploaded image into JPEG then base64
 def encode(img):
     img = (image2np(img.data) * 255).astype('uint8')
-    pil_img = PILImage.fromarray(img)
-    #IP(pil_img)
-    #pil_img = IP(pil_img)
-    #pil_img.show()
+    pillow_img = PILImage.fromarray(img)
     buff = BytesIO()
-    pil_img.save(buff, format="JPEG")
+    pillow_img.save(buff, format="JPEG")
     return base64.b64encode(buff.getvalue()).decode("utf-8")
 
+
+# Using the "learn" variable to make a prediction on the uploaded image 
+# and update the database with nessesary information
 def model_predict(img):
-    imagecopy = img
     img = open_image(BytesIO(img))
-    pred_class,pred_idx,outputs = learn.predict(img)
+    pred_class,pred_id,outputs = learn.predict(img)
     formatted_outputs = ["{:.1f}%".format(value) for value in [x * 100 for x in torch.nn.functional.softmax(outputs, dim=0)]]
     pred_probs = sorted(
             zip(learn.data.classes, map(str, formatted_outputs)),
@@ -128,46 +125,92 @@ def model_predict(img):
             reverse=True
         )
 
+    # Saving a version of the base64 image to use for the saving to the database 
     img_data = encode(img)
+    
+    # Inicialise advice variable
+    advice = "None"
 
-#need to add advice
+    # Assign the predicted lesion to a variable
+    lesion = pred_probs[0][0]
 
+
+    # If statements assigning advice from the database dependant on the predicted lesion
+    if lesion == 'Melanoma':
+        dbadvice = advicedb.query.filter_by(Lesion_Type='Melanoma').first()
+        advice = dbadvice.Advice
+
+    if lesion == 'Benign keratosis':
+        dbadvice = advicedb.query.filter_by(Lesion_Type='Benign keratosis').first()
+        advice = dbadvice.Advice
+
+    if lesion == 'Actinic keratoses':
+        dbadvice = advicedb.query.filter_by(Lesion_Type='Actinic keratoses').first()
+        advice = dbadvice.Advice
+
+    if lesion == 'Dermatofibroma':
+        dbadvice = advicedb.query.filter_by(Lesion_Type='Dermatofibroma').first()
+        advice = dbadvice.Advice
+
+    if lesion == 'Vascular lesions':
+        dbadvice = advicedb.query.filter_by(Lesion_Type='Vascular lesions').first()
+        advice = dbadvice.Advice
+
+    if lesion == 'Basal cell carcinoma':
+        dbadvice = advicedb.query.filter_by(Lesion_Type='Basal cell carcinoma').first()
+        advice = dbadvice.Advice
+
+    if lesion == 'Melanocytic nevi':
+        dbadvice = advicedb.query.filter_by(Lesion_Type='Melanocytic nevi').first()
+        advice = dbadvice.Advice
+
+    # If the prediction is not confident, 
     if pred_probs[0][1] < '20%':
         pred_class = 'No Cancer Detected'
+        advice = "We did not detect that the lesion was cancerous. However, we recommend you keeping an eye on the lesion for changes and have schelduled a retest for you next month. If you are concerned about the lesion, please contact your GP or Dermatologist."
 
-
+    # If the user is not logged in, return the result and do not save the test data to the database
     if "logged_in" not in session:
-        result = {"class":pred_class, "probs":pred_probs, "image":img_data}
+        result = {"class":pred_class, "probs":pred_probs, "image":img_data, "adv":advice}
         return render_template('result.html', result=result)
-  
+    
+    # If the user is logged in, save the test data to the database
     localtime = datetime.now()
     it = imagetest(image = img_data,
                         prediction = pred_class,
-                        #advice = adv,
                         date = date.today().strftime("%B %d, %Y"),
-                        #date.today().strftime("%B %d, %Y")
+                        advice = advice,
                         time = localtime.strftime("%H:%M:%S"),
                         username = session['username'],
                         next_test = (date.today() + timedelta(days=30)).strftime('%B %d, %Y')
     )
     
+    # Getting the username of the current logged in user
     loggedin = accounts.query.filter_by(username=session['username']).first()
+    # Updating the next test date for the user
     loggedin.schelduled_test = (date.today() + timedelta(days=30))
+    # Updating the users test count
     loggedin.test_count = loggedin.test_count + 1
 
+    # Commiting the changes to the database
     db.session.add(it)
     db.session.commit()
     
+    # If the prediction is confident, save the results to the database for incremental learning
     if pred_probs[0][1] > '20%':
+
+        # ID for the image will be the time to the nearest second
         generateid = datetime.now()
         time_string = generateid.strftime("%Y%m%d%H%M%S")
+
+        # Saving the image data to the database
         collectimage = image_training(image_id = time_string,
                                         image = img_data
                                     )
         db.session.add(collectimage)
         db.session.commit()
 
-
+        # Saving the needed prediction csv data to the database
         for_training = model_training(lesion_id = 'NA',
                                         image_id = time_string,
                                         dx = 'NA',
@@ -177,16 +220,15 @@ def model_predict(img):
                                         localization = 'NA',
                                         lesion = pred_class
                                         )
-
-
         db.session.add(for_training)
         db.session.commit()
 
-    result = {"class":pred_class, "probs":pred_probs, "image":img_data}
+    # Return the results to the results page for the user to view
+    result = {"class":pred_class, "probs":pred_probs, "image":img_data, "adv":advice}
     return render_template('result.html', result=result)
 
 
-
+# Image processing algorithm
 def IP(img, clarity):
     # Convert image to openCV 
     img = open_image(BytesIO(img))
@@ -222,6 +264,7 @@ def IP(img, clarity):
 
     h = int(h)
     w = int(w)
+
 
     cv2.circle(Image, center = (w,h), radius =10, color =(205, 114, 101), thickness=1)
     center = (w,h)
@@ -307,25 +350,33 @@ def IP(img, clarity):
 
 
 
+# Flask app 
+
+# Home page
 @application.route('/')
 def index():
     return render_template('index.html')
 
+# Test Page
 @application.route('/test', methods=['GET', "POST"])
 def test():
     # Main page
     return render_template('test.html')
 
-
+# Upload image and predict
 @application.route('/upload', methods=["POST", "GET"])
 def upload():
     if request.method == 'POST':
         # Get the file from post request
         img = request.files['file'].read()
+        # Initialize variable for the image clarity
         clarity = 'NULL'
+        # Pass the image and clarity vaiable to the image processing 
+        # function and get results
         IP(img, clarity)
         img, clarity = IP(img, clarity)
 
+        # If the image is not clear enough, flash a message and ask to take again
         if clarity == 'Unclear':
             flash('The image uploaded was not readable.  Please upload a clearer image with the area of concern at the center.')
             return redirect(url_for('test'))
@@ -334,45 +385,55 @@ def upload():
             # Make prediction
             preds = model_predict(img)
             return preds
-      
     return 'OK'
 
-
+# Login page
 @application.route("/login",methods=["GET", "POST"])
 def login():
+
     if request.method == "POST":
+        # Get the username and password from the input form
         username = request.form["username"]
         password = request.form["password"]
 
+        # Check if the username exists
         loggedin = accounts.query.filter_by(username=username).first()
         
+        # Check if the username and password are correct
         if loggedin is not None and bcrypt.checkpw(password.encode('utf-8'), loggedin.password.encode('utf-8')):
             session["logged_in"] = True
+            # Set the session username to the username of the logged in user
             session['username'] = loggedin.username
             session['id'] = loggedin.id
             return redirect(url_for("index"))
-
+        
+        # If the username or password is incorrect, flash a message
         flash("Invalid username or password")
         session["logged_in"] = False
     return render_template("login.html")
 
 
-
+# Create account page
 @application.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
+        # Get information from the input form
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
         sex = request.form['sex']
         age = request.form['age']
 
-        user=accounts.query.filter_by(email=email).first() #checking if account exists
+        # Check if the account already exists
+        user=accounts.query.filter_by(username=username).first()
         if user:
-            flash("Account with same email already exists")
+            flash("Account with same email or username already exists")
             return redirect(url_for("register"))
-        
+   
+        # Encrypt the password
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+        # Add the account to the database
         register = accounts(username = username, email = email, password = hashed_password, test_count = 0, account_created = date.today().strftime("%B %d, %Y"), sex = sex, age = age)
         db.session.add(register)
         db.session.commit()
@@ -381,10 +442,10 @@ def register():
     return render_template("register.html")
 
 
-
+# Logout functionality
 @application.route('/logout')
 def logout():
-     # Remove session data, this will log the user out
+    # Remove session data, loggin the user out
     session.pop('logged_in', None)
     session.pop('id', None)
     session.pop('username', None)
@@ -392,58 +453,41 @@ def logout():
     return redirect(url_for('index'))
 
 
+# Information link
 @application.route('/info', methods=['GET', "POST"])
 def info():
     # Information page
     return render_template('info.html')
 
 
-@application.route('/predict')
-def predict():
-    books = Book.query.all()
-    return render_template('predict.html', books=books)
-
-
-# @application.route('/add', methods =['POST'])
-# def insert_book():
-#     if request.method == "POST":
-#         book = Book(
-#             title = request.form.get('title'),
-#             author = request.form.get('author'),
-#             price = request.form.get('price')
-#         )
-#         db.session.add(book)
-#         db.session.commit()
-#         flash("Book added successfully")
-#         return redirect(url_for('predict'))
-
-
+# User Profile page
 @application.route('/account')
 def account():
     account = accounts.query.filter_by(username=session['username'])
-
     return render_template('account.html', account=account)
 
 
-@application.route('/update', methods = ['POST'])
+#  Update profile information
+@application.route('/update/', methods = ['POST'])
 def update():
     if request.method == "POST":
+        # Get the information from the input form
         my_data = accounts.query.get(request.form.get('id'))
-
         my_data.username = request.form['username']
         my_data.email = request.form['email']
         my_data.password = request.form['password']
+        # Encrypt password
         hashed_password = bcrypt.hashpw(my_data.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         my_data.password = hashed_password
 
-
         session['username'] = my_data.username
-
         db.session.commit()
+
         flash("Account is updated")
         return redirect(url_for('account'))
 
 
+# View test history page
 @application.route('/account1', methods=['GET', "POST"])
 def account1():
     # Account page
@@ -451,6 +495,7 @@ def account1():
     return render_template('account1.html', test=test)
 
 
+# Delete a test 
 @application.route('/delete/<id>/', methods = ['GET', 'POST'])
 def delete(id):
     my_data = imagetest.query.get(id)
@@ -461,7 +506,6 @@ def delete(id):
 
 
 if __name__ == '__main__':
-
     if "prepare" not in sys.argv:
         application.run(host='0.0.0.0', port=80, debug=False)
 

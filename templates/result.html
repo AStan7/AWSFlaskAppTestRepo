@@ -2,28 +2,18 @@
 {% extends "base.html" %}
 {% block result %}
 <body>
-<content>
-  <p>Prediction: <b ID="result">{{result.get("class")}}</b></p>
-    <table class="table table-striped" ID="table">
-      <thead>
-        <tr>
-          <th scope="col">Lesion type</th>
-          <th scope="col">Confidence</th>
-        </tr>
-      </thead>
-      <tbody>
-        {%for i in range(0, 7)%}
-        <tr>
-          <th scope="row">{{result.get("probs")[i][0]}}</th>
-          <td>{{result.get("probs")[i][1]}}</td>
-        
-        </tr>
-        {%endfor%}
-      </tbody>
-    </table>
-<figure class="figure">
-  <img ID="image" src="data:image/png;base64, {{result.get("image")}}" class="figure-img img-thumbnail input-image">
-</figure>
+<content id="resultcontent">
+  <p id="space"></p>
+      <div id="resulttable">
+        <h2>Scanned Result</h2>
+        <figure class="figure" id="rimage">
+          <img ID="resultimage" src="data:image/png;base64, {{result.get("image")}}" class="figure-img img-thumbnail input-image">
+        </figure>
+          <p ID="result">{{result.get("class")}}</p>
+        <thead>
+        </thead>
+            <p id="resultadvice">{{result.get("adv")}} </p>
+      </div>
 </content>
 </body>
 

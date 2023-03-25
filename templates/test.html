@@ -1,52 +1,74 @@
 {% extends "base.html" %}
 {% block index %}
-<script>
-            /* Storing user's device details in a variable*/
-    let details = navigator.userAgent;
+<body>
+    <script>
+                /* Storing user's device details in a variable*/
+        let details = navigator.userAgent;
 
-    /* Creating a regular expression 
-    containing some mobile devices keywords 
-    to search it in details string*/
-    let regexp = /android|iphone|kindle|ipad/i;
+        /* Creating a regular expression 
+        containing some mobile devices keywords 
+        to search it in details string*/
+        let regexp = /android|iphone|kindle|ipad/i;
 
-    /* Using test() method to search regexp in details
-    it returns boolean value*/
-    let isMobileDevice = regexp.test(details);
+        /* Using test() method to search regexp in details
+        it returns boolean value*/
+        let isMobileDevice = regexp.test(details);
 
-</script>
+    </script>
 
-<div class="content">
-    <h1>Benign or Malignant</h1>
-    <p class="comment">Find out if the skin lesion is normal or not. Upload image or specify URL.</p>
-    <dive class="col-xs-6">
-        <form action="/upload" id="upload-file" method="post" enctype="multipart/form-data">
-            <p class="comment">Select image to upload and press Detect:</p>
-            <div class="custom-file">
-                {% if isMobileDevice %}  
-                <input type="file" id="input_file" capture="user" accept="image/*"/> 
-                <label class="custom-file-label" for="customFile"></label>
-                {% else %}
-                <input ID="input_file" type="file" class="custom-file-input" name="file">
-                <label class="custom-file-label" for="customFile"></label>
-                {% endif %}
-            </div>
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                <div class="flash-message">
-                    {{ message }}
+    <div id="testcontent">
+        <h1>Let's Test!</h1>
+        <dive class="col-xs-6">
+            <form action="/upload" id="upload-file" method="post" enctype="multipart/form-data">
+                <p>Please select an image of the skin lesion you would like to scan or take a picture.</p>
+                    <p>Please ensure you adhere to the instruction provided below</p>
+                <div class="custom-file">
+                    {% if isMobileDevice %}  
+                    <input type="file" id="input_file" capture="user" accept="image/*"/> 
+                    <label class="custom-file-label" for="customFile"></label>
+                    {% else %}
+                    <input ID="input_file" type="file" class="custom-file-input" name="file">
+                    <label class="custom-file-label" for="customFile"></label>
+                    {% endif %}
                 </div>
-                {% endfor %}
-            {% endif %}
-            {% endwith %}
-            <div>
-                <input ID="submit_btn" type="submit" class="btn btn-success" id="btn-predict" value="Detect" />
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="flash-message">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+                <div>
+                    <input ID="submit_btn" type="submit" class="btn btn-success" id="btn-predict" value="Detect" />
+                </div>
+            </form>
+            <div id="instructions">
+                <ul>
+                <li>Camera should be between 5-10cm from skin when image is taken</li>
+                <li>Ensure the lesion is in focus and in the center of the image</li>
+                <li>Try to keep foreign objects out of the image (jewelry, hair, clothes, etc.)</li>
+                </ul>
+                <div id="inimages">
+                <div>
+                    <img src="static/images/example1.jpg">
+                    <br>
+                    <img src="static/images/check.png">
+                </div>
+                <div>
+                    <img src="static/images/example2.jpg">
+                    <br>
+                    <img src="static/images/check.png">
+                </div>
+                <div>
+                    <img src="static/images/example4.jpg">
+                    <br>
+                    <img src="static/images/check.png">
+                </div>
+                </div>
             </div>
-        </form>
-
-        <h3 id="result">
-            <span> </span>
-        </h3>
-    </dive>
-</div>  
+        </dive>
+    </div>  
+</body>
 {% endblock %}
