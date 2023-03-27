@@ -43,7 +43,7 @@ body{
   width: 100%;
   background-size: contain;
   background-position: center;
-  background-image: url('bk6copy1.jpg');
+  background-image: url('bk6cop1.jpg');
 }
 
 
@@ -95,7 +95,7 @@ body{
 .navbar ul li.skin-cancer {
   margin-right: 50px;
 }
-.navbar ul li:nth-child(5):before {
+.navbar ul li:nth-child(4):before {
   display: none;
   margin-right: 100px;
 }
@@ -697,8 +697,9 @@ padding-right: 15px;
 
 
 #indexskincancer{
+
   width: 30%;
-  padding-top: 70px;
+  padding-top: 100px;
   margin: auto;
 }
 
@@ -742,8 +743,7 @@ padding-right: 15px;
 #indexabout{
   width: 30%;
   margin: auto;
-  padding: 15px;
-  margin-top: 20px;
+  padding-top: 80px;
   padding-bottom: 100px;
 }
 
