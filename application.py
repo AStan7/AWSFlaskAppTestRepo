@@ -20,10 +20,18 @@ from datetime import date, datetime, timedelta
 import bcrypt
 from fastai import *
 from fastai.vision import *
+from flask_talisman import Talisman
 
 
 # Create Flask application
 application = Flask(__name__)
+talisman = Talisman(app)
+
+# Configure Flask-Talisman to set the anti-clickjacking header
+talisman.content_security_policy = {
+    'default-src': '\'self\'',
+    'frame-ancestors': '\'self\''
+}
 
 # Connect to MySQL database in AWS RDS
 application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:password@flaskdb.cy3lotqpgdfu.us-east-1.rds.amazonaws.com/testingdb_aws'
@@ -311,6 +319,7 @@ def IP(img, clarity):
     y = y-15
     width = width+30
     height = height+30
+    
     # Drawing rectangle
     cv2.rectangle(Image,(x,y),(x+width,y+height),(0,255,0),2)
 
@@ -509,3 +518,18 @@ if __name__ == '__main__':
     if "prepare" not in sys.argv:
         application.run(host='0.0.0.0', port=80, debug=False)
 
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::mybucket/*",
+      "Condition": {
+        "StringEquals": {
+          "aws:userId": "Users ARN"
+        }
+      }
+    }
+  ]
+}
