@@ -20,18 +20,19 @@ from datetime import date, datetime, timedelta
 import bcrypt
 from fastai import *
 from fastai.vision import *
-from flask_talisman import Talisman
+#from flask_talisman import Talisman
 
 
 # Create Flask application
 application = Flask(__name__)
-talisman = Talisman(app)
 
-# Configure Flask-Talisman to set the anti-clickjacking header
-talisman.content_security_policy = {
-    'default-src': '\'self\'',
-    'frame-ancestors': '\'self\''
-}
+# talisman = Talisman(app)
+
+# # Configure Flask-Talisman to set the anti-clickjacking header
+# talisman.content_security_policy = {
+#     'default-src': '\'self\'',
+#     'frame-ancestors': '\'self\''
+# }
 
 # Connect to MySQL database in AWS RDS
 application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:password@flaskdb.cy3lotqpgdfu.us-east-1.rds.amazonaws.com/testingdb_aws'
@@ -385,7 +386,8 @@ def upload():
         IP(img, clarity)
         img, clarity = IP(img, clarity)
 
-        # If the image is not clear enough, flash a message and ask to take again
+        # If the image is not clear enough, 
+        # flash a message and ask to take again
         if clarity == 'Unclear':
             flash('The image uploaded was not readable.  Please upload a clearer image with the area of concern at the center.')
             return redirect(url_for('test'))
@@ -430,7 +432,7 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        sex = request.form['sex']
+        gender = request.form['gender']
         age = request.form['age']
 
         # Check if the account already exists
@@ -440,10 +442,14 @@ def register():
             return redirect(url_for("register"))
    
         # Encrypt the password
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), 
+                                        bcrypt.gensalt()).decode('utf-8')
 
         # Add the account to the database
-        register = accounts(username = username, email = email, password = hashed_password, test_count = 0, account_created = date.today().strftime("%B %d, %Y"), sex = sex, age = age)
+        register = accounts(username = username, email = email, 
+                            password = hashed_password, test_count = 0, 
+                            account_created = date.today().strftime("%B %d, %Y"), 
+                            gender = gender, age = age)
         db.session.add(register)
         db.session.commit()
 
@@ -518,18 +524,4 @@ if __name__ == '__main__':
     if "prepare" not in sys.argv:
         application.run(host='0.0.0.0', port=80, debug=False)
 
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::mybucket/*",
-      "Condition": {
-        "StringEquals": {
-          "aws:userId": "Users ARN"
-        }
-      }
-    }
-  ]
-}
+
