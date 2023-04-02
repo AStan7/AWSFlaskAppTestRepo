@@ -20,19 +20,19 @@ from datetime import date, datetime, timedelta
 import bcrypt
 from fastai import *
 from fastai.vision import *
-#from flask_talisman import Talisman
+from flask_talisman import Talisman
 
 
 # Create Flask application
 application = Flask(__name__)
 
-#talisman = Talisman(app)
+talisman = Talisman(app)
 
-# # Configure Flask-Talisman to set the anti-clickjacking header
-# talisman.content_security_policy = {
-#     'default-src': '\'self\'',
-#     'frame-ancestors': '\'self\''
-# }
+# Configure Flask-Talisman to set the anti-clickjacking header
+talisman.content_security_policy = {
+    'default-src': '\'self\'',
+    'frame-ancestors': '\'self\''
+}
 
 # Connect to MySQL database in AWS RDS
 application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:password@flaskdb.cy3lotqpgdfu.us-east-1.rds.amazonaws.com/testingdb_aws'
@@ -483,7 +483,7 @@ def account():
 
 
 #  Update profile information
-@application.route('/update/', methods = ['GET', 'POST'])
+@application.route('/update/', methods = ['POST'])
 def update():
     if request.method == "POST":
         # Get the information from the input form
@@ -500,7 +500,6 @@ def update():
 
         flash("Account is updated")
         return redirect(url_for('account'))
-
 
 
 # View test history page

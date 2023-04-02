@@ -1,0 +1,829 @@
+/* Global */
+*{
+  margin: 0;
+  padding: 0;
+}
+
+p{
+    font-weight: 600;
+}
+
+body{
+  margin-top: 130px; 
+}
+
+/* Navigation bar */
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
+
+#logo{
+  width: 110px;
+  height: 110px;
+  background-size: cover;
+}
+
+.logo-container p{
+  font-size: 30px;
+  color: #fff;
+  margin-left: 20px;
+  font-weight: bold;
+  display: flex;
+  text-align: left;
+}
+
+
+.banner{
+  background-size: cover;
+  min-height: 100vh;
+  width: 100%;
+  background-size: contain;
+  background-position: center;
+  background-image: url('bk6copy1.jpg');
+}
+
+
+#navbar_base{ 
+  position: relative;
+  z-index: 9999;
+  width: 100%;
+  text-align: right;
+  align-items: flex-end; /* align to the last baseline */
+  padding-top: 10px;
+  padding-left: 5%;
+  padding-right: 20px;
+  display: flex;
+  justify-content: space-between; /* add this property */
+  background-color: rgb(47, 255, 0);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+
+.navbar-text {
+  text-align: right;
+  display: flex;
+  align-items: last baseline;
+}
+
+
+
+.navbar ul li{
+  display: inline-block;
+  list-style: none;
+  position: relative;
+  margin-right: 20px;
+  margin-bottom: 10px;
+
+}
+
+.navbar ul li:not(:last-child):before {
+  content: "";
+  position: absolute;
+  right: -11px;
+  top: 50%;
+  height: 20px;
+  border-left: 1px solid #ffffff;
+  transform: translateY(-50%);
+}
+.navbar ul li.skin-cancer {
+  margin-right: 50px;
+}
+.navbar ul li:nth-child(4):before {
+  display: none;
+  margin-right: 100px;
+}
+
+
+.navbar ul li a{
+  text-decoration: none;
+  color: #fff;
+  text-transform: uppercase;
+  padding : 5px 5px;
+}
+
+.profile-text {
+  text-align: center;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.profile-image {
+  width: 50px;
+  height: 50px;
+  margin-right: 20px;
+}
+
+.navbar ul li::after{
+  content: '';
+  height: 2px;
+  width: 0;
+  background: #ffffff;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+}
+
+
+.navbar ul li:hover::after{
+  width: 100%;
+}
+
+
+
+.login-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 100px;
+  border-radius: 20px;
+  border: 2px solid #fff;
+  margin-right: 20px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.login-button:hover {
+  background-color: #fff;
+  color: #000;
+  transition: all 0.3s ease-in-out;
+}
+
+
+.navbar ul li:last-child {
+  border-right: none;
+}
+.profile-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.navbar-text li.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px; /* adjust as needed */
+}
+
+.account-link {
+  position: relative;
+}
+
+.navbar-text img {
+  width: 60px;
+  height: 60px;
+}
+
+/* Navigation bar End */
+
+
+/* Test */
+
+#testcontent{
+  margin: auto; 
+  text-align: center;
+}
+
+#testcontent h1{
+  font-size: 45px;
+  padding-top: 50px;
+}
+
+#testcontent p{
+  margin: 20px auto;
+  font-weight: 100;
+  line-height: 25px;
+} 
+
+#submit_btn:hover {
+  background: rgb(7, 136, 0);
+}
+
+#submit_btn{
+  margin-top: 10px;
+  width: 175px;
+  padding: 10px 0;
+  margin-bottom: 25px;
+  text-align: center;
+  font-style: bold;
+  border-color: rgb(18, 180, 0);
+  font-weight: bold;
+  font-size: large;
+  background-color: rgb(18, 180, 0);
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border-radius: 25px;
+}
+
+#input_file{
+  background-color: rgb(100, 100, 100);
+  padding: 15px 0;
+  margin-top: 20px;
+  text-align: center;
+  border-radius: 25px;
+  position: relative;
+  overflow: hidden;
+  width: 500px;
+  font-weight: bold;
+  border: 2px solid #fff;
+  color: #fff;
+  cursor: pointer;
+}
+
+
+#pasttest_thumnail{
+  width: 150px;
+  height: 150px;
+}
+
+.custom-file-input {
+  width: 50%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+.custom-file-label {
+  width: 40%;
+}
+
+
+#instructions {
+  color: #ffffff;
+  background-color: #272727;
+  width: 35%;
+  margin: auto;
+  text-align: left;
+  padding: 30px;
+  align-items: center;
+  border-radius: 25px;
+  
+}
+
+#instructions li {
+  background-color: #272727;
+  margin-left: 35px;
+}
+
+#inimages {
+  text-align: center;
+  margin-left: 20px;
+}
+
+#inimages div {
+  display: inline-block;
+  margin-right: 50px;
+  margin-top: 20px;
+  border-radius: 25px;
+}
+
+#inimages img {
+  margin-top: 15px;
+  width: 120px;
+  height: 120px;
+  border-radius: 15px;
+}
+
+#inimages img:last-child {
+  margin-top: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 25px;
+}
+
+/* Test End */
+
+
+
+
+
+
+
+/* Login */
+* 
+{
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+
+.login, .register {
+  width: 400px;
+  background-color: #ffffff;
+  box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+  margin: auto;
+
+}
+
+.login h1, .register h1 {
+  text-align: center;
+  color: #5b6574;
+  font-size: 24px;
+  padding: 20px 0 20px 0;
+  border-bottom: 1px solid #dee0e4;
+}
+.login .links, .register .links {
+  display: flex;
+  padding: 0 15px;
+}
+
+.login .links a, .register .links a {
+  color: #adb2ba;
+  text-decoration: none;
+  display: inline-flex;
+  padding: 0 10px 10px 10px;
+  font-weight: bold;
+}
+.login .links a:hover, .register .links a:hover {
+  color: #9da3ac;
+}
+.login .links a.active, .register .links a.active {
+  border-bottom: 3px solid #3274d6;
+  color: #3274d6;
+}
+.login form, .register form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 20px;
+}
+.login form label, .register form label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: #3274d6;
+  color: #ffffff;
+}
+.login form input[type="password"], .login form input[type="text"], .login form input[type="email"], .register form input[type="password"], .register form input[type="text"], .register form input[type="email"] {
+  width: 310px;
+  height: 50px;
+  border: 1px solid #dee0e4;
+  margin-bottom: 20px;
+  padding: 0 15px;
+}
+.login form input[type="submit"], .register form input[type="submit"] {
+  width: 100%;
+  padding: 15px;
+  margin-top: 20px;
+  background-color: #3274d6;
+  border: 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff;
+  transition: background-color 0.2s;
+}
+.login form input[type="submit"]:hover, .register form input[type="submit"]:hover {
+  background-color: #2868c7;
+  transition: background-color 0.2s;
+}
+.navtop {
+  background-color: #2f3947;
+  height: 60px;
+  width: 100%;
+  border: 0;
+}
+.navtop div {
+  display: flex;
+  margin: 0 auto;
+  width: 1000px;
+  height: 100%;
+}
+.navtop div h1, .navtop div a {
+  display: inline-flex;
+  align-items: center;
+}
+.navtop div h1 {
+  flex: 1;
+  font-size: 24px;
+  padding: 0;
+  margin: 0;
+  color: #eaebed;
+  font-weight: normal;
+}
+.navtop div a {
+  padding: 0 20px;
+  text-decoration: none;
+  color: #c1c4c8;
+  font-weight: bold;
+}
+.navtop div a i {
+  padding: 2px 8px 0 0;
+}
+.navtop div a:hover {
+  color: #eaebed;
+}
+body.loggedin {
+  background-color: #f3f4f7;
+}
+
+/* 
+.content{
+  margin: auto; 
+  text-align: center;
+} 
+
+.content h1{
+  font-size: 70px;
+  margin-top: 5%;
+}
+
+.content p{
+  margin: 20px auto;
+  font-weight: 100;
+  line-height: 25px;
+}
+
+
+.content {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+.content h2 {
+  margin: 0;
+  padding: 25px 0;
+  font-size: 22px;
+  border-bottom: 1px solid #e0e0e3;
+  color: #4a536e;
+}
+.content > p, .content > div {
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+  margin: 25px 0;
+  padding: 25px;
+background-color: #fff;
+
+}
+*/
+/* .content > p table td, .content > div table td {
+padding: 5px;
+}
+
+.content > p table td:first-child, .content > div table td:first-child {
+font-weight: bold;
+color: #4a536e;
+padding-right: 15px;
+} */
+
+
+
+/* Login End */
+
+
+
+/* Result Page */
+
+
+
+#rimage{
+  padding-top: 30px;
+}
+
+#space{
+  padding-top: 50px;
+}
+
+#resultimage{
+  width: 30%;
+  height: 30%;
+  background-color: #4c4c4c;
+  padding: 2px;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  border-radius: 18px;
+  box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+}
+
+#resulttable{
+  color: #ffffff;
+  background-color: #4e4e4e;
+  width: 30%;
+  border-radius: 25px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+
+#result{
+  font-weight: 700;
+}
+
+#resultadvice{
+  margin: 20px auto;
+  width: 90%;
+  font-weight: 100;
+  line-height: 25px;
+  padding: 25px;
+}
+
+
+#resultcontent{
+  margin: auto; 
+  text-align: center;
+} 
+
+
+#resultcontent h1{
+  font-size: 70px;
+  margin-top: 5%;
+}
+
+
+#resultcontent h2 {
+  padding: 25px 0;
+  font-size: 22px;
+  border-bottom: 1px solid #e0e0e3;
+  color: #ffffff;
+}
+
+
+/* result page end */
+
+/* Index */
+
+#indexwhatis{
+  width: 30%;
+  margin-top: 40px;
+
+  padding: 15px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  font-weight: 600;
+
+}
+
+#indexwhatis ul{
+  vertical-align: top;
+  padding-top: 20px;
+  text-align: left;
+  display : inline-block;
+}
+
+#indexwhatis ul li{
+  margin-left: 25%;
+  padding-right: 60px;
+  float: top;
+  width: 100%;
+}
+
+#indexwhy ul{
+  font-weight: 600;
+  vertical-align: top;
+  padding-top: 20px;
+  text-align: left;
+  display : inline-block;
+  margin-left: 70px;
+}
+
+#indexwhatis h2{
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 25px;
+}
+
+
+#indexwhatis button{
+  height: 30px;
+  width: 25%;
+  background-color: #4c4c4c;
+  margin-top: 15px;
+  color: #fff;
+  border: 0;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+#takethetest{
+  margin-left: 25%;
+  margin-bottom: 25px;
+  margin-right: 5%;
+  margin-top: 40px;
+  font-size: 20px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+
+}
+
+#takethetest img{
+  width: 100px;
+  height: 100px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+#takethetest h2{
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 25px;
+}
+
+#takethetest a {
+  display: block;
+}
+
+#takethetest button{
+  height: 30px;
+  width: 40%;
+  background-color: #4c4c4c;
+  margin-top: 15px;
+  color: #fff;
+  border: 2px;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+
+#indexaccount{
+  width: 25%;
+  margin-top: 20px;
+  text-align: center;
+  margin-left: 20%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+#indexaccount h2{
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 25px;
+}
+
+#indexaccount button{
+  height: 30px;
+  width: 33%;
+  background-color: #4c4c4c;
+  margin-top: 15px;
+  color: #fff;
+  border: 0;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+#indexwhy{
+  width: 30%;
+  padding: 15px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+}
+
+#indexwhy h2{
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 25px;
+}
+
+
+#indexskincancer{
+
+  width: 30%;
+  padding-top: 100px;
+  margin: auto;
+}
+
+
+#indexskincancer h2{
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 25px;
+  text-align: center;
+}
+
+#indexskincancer ul{
+  vertical-align: top;
+  padding-top: 20px;
+  text-align: left;
+  display : inline-block;
+  font-weight: 400;
+}
+
+#indexskincancer ul li{
+  margin-left: 10%;
+  padding-right: 60px;
+  float: top;
+  width: 100%;
+}
+
+#indexskincancer img{
+  width: 600px;
+  height: 300px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+#bellow{
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+
+
+#indexabout{
+  width: 30%;
+  margin: auto;
+  padding-top: 80px;
+  padding-bottom: 100px;
+}
+
+
+#indexabout h2{
+  margin-top: 40px;
+  margin-bottom: 15px;
+  font-size: 25px;
+  text-align: center;
+}
+
+
+
+#disclaimer1{
+  padding-top: 20px;
+}
+
+
+
+
+/* Index End */
+
+
+/* footer */
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 40px 0;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-section {
+  flex: 1;
+  padding: 0 20px;
+}
+
+.footer-section h2 {
+  margin-bottom: 20px;
+}
+
+.footer-section about ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-section about li {
+  margin-bottom: 10px;
+}
+
+.footer-section about a {
+  color: #fff;
+}
+
+.footer-section rights p {
+  text-align: center;
+}
+
+/* End Footer */
+
+
+
+
+
+
+
+
+
+
+
+/* upload */
+/* account */
+.form-control {
+  width: 50%;
+}
+
