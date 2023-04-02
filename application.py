@@ -20,19 +20,11 @@ from datetime import date, datetime, timedelta
 import bcrypt
 from fastai import *
 from fastai.vision import *
-#from flask_talisman import Talisman
 
 
 # Create Flask application
 application = Flask(__name__)
 
-#talisman = Talisman(app)
-
-# # Configure Flask-Talisman to set the anti-clickjacking header
-# talisman.content_security_policy = {
-#     'default-src': '\'self\'',
-#     'frame-ancestors': '\'self\''
-# }
 
 # Connect to MySQL database in AWS RDS
 application.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:password@flaskdb.cy3lotqpgdfu.us-east-1.rds.amazonaws.com/testingdb_aws'
@@ -432,7 +424,7 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
-        gender = request.form['gender']
+        sex = request.form['sex']
         age = request.form['age']
 
         # Check if the account already exists
@@ -442,14 +434,10 @@ def register():
             return redirect(url_for("register"))
    
         # Encrypt the password
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), 
-                                        bcrypt.gensalt()).decode('utf-8')
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
         # Add the account to the database
-        register = accounts(username = username, email = email, 
-                            password = hashed_password, test_count = 0, 
-                            account_created = date.today().strftime("%B %d, %Y"), 
-                            gender = gender, age = age)
+        register = accounts(username = username, email = email, password = hashed_password, test_count = 0, account_created = date.today().strftime("%B %d, %Y"), sex = sex, age = age)
         db.session.add(register)
         db.session.commit()
 
@@ -483,7 +471,7 @@ def account():
 
 
 #  Update profile information
-@application.route('/update/', methods = ['GET', 'POST'])
+@application.route('/update/', methods = ['POST'])
 def update():
     if request.method == "POST":
         # Get the information from the input form
@@ -500,7 +488,6 @@ def update():
 
         flash("Account is updated")
         return redirect(url_for('account'))
-
 
 
 # View test history page
