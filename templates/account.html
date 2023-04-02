@@ -9,17 +9,6 @@
 
 <body>
     <p id="space"></p>
-    <div class="container mt-4">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-success" style="width: 30%; margin-top: 60px" role="alert">
-                        {{message}}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
         <div class="row">
             <div class="all_card" id="allcard">
                 {% for accounts in account %}
@@ -27,33 +16,35 @@
             
             <!-- update model -->
             <div id="modaledit{{accounts.id}}" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Update Account Information</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{url_for('update')}}" method="POST">
-                                <div class="form-group">
-                                    <label>Username:</label>
-                                    <input type="hidden"  name="id" value="{{accounts.id}}">
-                                    <input type="text" class="form-control" name="username" value="{{accounts.username}}">
-                                </div>
-                                <div class="form-group">
-                                    <label>Email:</label>
-                                    <input type="text" class="form-control" name="email" value="{{accounts.email}}">
-                                </div>
-                                <div class="form-group">
-                                    <label>Password:</label>
-                                    <input type="password" class="form-control" name="password" value="********">
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn btn-primary mt-4" type="submit">Update</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div id="update-form">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Update Account Information</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{url_for('update')}}" method="POST">
+                                    <div class="form-group">
+                                        <label>Username:</label>
+                                        <input type="hidden"  name="id" value="{{accounts.id}}">
+                                        <input type="text" class="form-control" name="username" value="{{accounts.username}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email:</label>
+                                        <input type="text" class="form-control" name="email" value="{{accounts.email}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password:</label>
+                                        <input type="password" class="form-control" name="password" value="********">
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-primary mt-4" type="submit">Update</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -64,6 +55,17 @@
     <div class="container mt-4 mb-4 p-3 d-flex justify-content-center" id="card">
         <div class="card p-5" style="width: 30%; margin-top: 60px">
           <div class="image d-flex flex-column justify-content-center align-items-center">
+            <div>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div id="update-message" role="alert">
+                            {{message}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                {% endwith %}
+            </div>
             <button class="btn btn-secondary">
               <img src="static/images/accounticon.png" height="100" width="100" />
             </button>
@@ -98,8 +100,9 @@
           </div>
         </div>
       </div>
-      
       {% endfor %}
+      
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
 </body>
 

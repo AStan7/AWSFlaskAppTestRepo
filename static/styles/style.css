@@ -811,8 +811,21 @@ footer {
 
 /* End Footer */
 
+/* update */
 
+#update-form {
+  margin: 0 auto;
+  padding-top: 120px;
+}
 
+#update-message {
+  margin: auto;
+  width: 350px;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+/* End update */
 
 
 

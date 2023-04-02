@@ -479,6 +479,7 @@ def update():
         my_data.username = request.form['username']
         my_data.email = request.form['email']
         my_data.password = request.form['password']
+
         # Encrypt password
         hashed_password = bcrypt.hashpw(my_data.password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         my_data.password = hashed_password
@@ -486,7 +487,7 @@ def update():
         session['username'] = my_data.username
         db.session.commit()
 
-        flash("Account is updated")
+        flash("Account Updated Successfully")
         return redirect(url_for('account'))
 
 
